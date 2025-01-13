@@ -8,19 +8,27 @@ stages:
 before_script:
   - echo "Cleaning npm cache"
   - npm cache clean --force
+  - |
+    if [[ "$CI_PROJECT_PATH" == *"T-DEV-702-Api"* ]]; then
+      export REPO="api"
+    elif [[ "$CI_PROJECT_PATH" == *"T-DEV-703-Mobile"* ]]; then
+      export REPO="mobile"
+    else
+      echo "Nom de projet non reconnu. Exiting."
+      exit 1
+    fi
+  - echo "REPO is set to $REPO"
 
 # Variables de configuration
 variables:
   API_REPO_URL: "t-dev.epitest.eu/MAR_18/T-DEV-702-Api.git"
   MOBILE_REPO_URL: "t-dev.epitest.eu/MAR_18/T-DEV-703-Mobile.git"
   
-  REPO: "api"
-
   DOCKER_IMAGE_NAME_API: "t-dev-702-api"
   DOCKER_IMAGE_NAME_MOBILE: "t-dev-703-mobile"
-  API_BRANCH: "feature/ci-config"  # à configurer plus tard
-  MOBILE_BRANCH: "feature/ci-config"  # à configurer plus tard
-  ENV: "prod"  # à configurer selon le contexte (dev, prod) dans le trigger master
+  API_BRANCH: "dev"  
+  MOBILE_BRANCH: "dev-mobile"  
+  ENV: "prod"  
 
 # Étape de clonage des dépôts
 clone_repos:
@@ -36,7 +44,7 @@ clone_repos:
         if [ "$ENV" == "dev" ]; then
           export CLONE_BRANCH="dev"
         elif [ "$ENV" == "prod" ]; then
-          export CLONE_BRANCH="feature/ci-config"  
+          export CLONE_BRANCH="dev"
         else
           echo "Invalid environment specified for API. Exiting."
           exit 1
@@ -46,7 +54,7 @@ clone_repos:
         if [ "$ENV" == "dev" ]; then
           export CLONE_BRANCH="dev"
         elif [ "$ENV" == "prod" ]; then
-          export CLONE_BRANCH="prod"
+          export CLONE_BRANCH="dev"
         else
           echo "Invalid environment specified for Mobile. Exiting."
           exit 1
@@ -56,14 +64,14 @@ clone_repos:
         exit 1
       fi
     - echo "Cloning from $CLONE_URL on branch $CLONE_BRANCH..."
-    - git clone --branch $CLONE_BRANCH $CLONE_URL app
+    - git clone --branch $CLONE_BRANCH $CLONE_URL .
     - echo "Listing files in the current directory:"
     - ls -l
     - echo "Listing files in the cloned repository directory:"
     - ls -l app
   artifacts:
     paths:
-      - app
+      - .
 
   
 
@@ -78,22 +86,22 @@ build_api_or_mobile:
     - |
       if [ "$REPO" == "api" ]; then
         if [ "$ENV" == "dev" ]; then
-          echo "Building Docker image for the API in dev environment..."
-          docker build -t ${DOCKER_IMAGE_NAME_API}:dev -f app/api/Dockerfile.dev app/api/
+          echo "Building and starting services for the API in dev environment using docker-compose..."
+          docker-compose -f app/docker-compose.yml up --build -d app
         elif [ "$ENV" == "prod" ]; then
-          echo "Building Docker image for the API in prod environment..."
-          docker build -t ${DOCKER_IMAGE_NAME_API}:prod -f app/api/Dockerfile.prod app/api/
+          echo "Building and starting services for the API in prod environment using docker-compose..."
+          docker-compose -f app/docker-compose.yml up --build -d app
         else
           echo "Unknown environment for API, exiting..."
           exit 1
         fi
       elif [ "$REPO" == "mobile" ]; then
         if [ "$ENV" == "dev" ]; then
-          echo "Building Docker image for the Mobile in dev environment..."
-          docker build -t ${DOCKER_IMAGE_NAME_MOBILE}:dev -f mobile/Dockerfile.dev mobile/
+          echo "Building and starting services for the Mobile in dev environment using docker-compose..."
+          docker-compose -f app/docker-compose.yml up --build -d mobile
         elif [ "$ENV" == "prod" ]; then
-          echo "Building Docker image for the Mobile in prod environment..."
-          docker build -t ${DOCKER_IMAGE_NAME_MOBILE}:prod -f mobile/Dockerfile.prod mobile/
+          echo "Building and starting services for the Mobile in prod environment using docker-compose..."
+          docker-compose -f app/docker-compose.yml up --build -d mobile
         else
           echo "Unknown environment for Mobile, exiting..."
           exit 1
@@ -115,7 +123,7 @@ test_api:
     - sigaRunner
   script:
     - echo "Running tests for the API..."
-    - docker run --rm ${DOCKER_IMAGE_NAME_API}:${ENV} npm test
+    - docker run --rm ${DOCKER_IMAGE_NAME_API}:${ENV} npm run test
   rules:
     - if: '($REPO == "api") && ($ENV == "prod")'
 
@@ -128,7 +136,7 @@ test_mobile:
     - sigaRunner
   script:
     - echo "Running tests for the Mobile..."
-    - docker run --rm ${DOCKER_IMAGE_NAME_MOBILE}:${ENV} npm test
+    - docker run --rm ${DOCKER_IMAGE_NAME_MOBILE}:${ENV} npm run test
   rules:
     - if: '($REPO == "mobile") && ($ENV == "prod")'
 
