@@ -8,15 +8,20 @@ before_script:
   - echo "Cleaning npm cache"
   - npm cache clean --force
   - echo "CI_PROJECT_PATH is $CI_PROJECT_PATH"
+  - echo "CI_COMMIT_REF_NAME is $CI_COMMIT_REF_NAME"
   - |
-    if [[ "$CI_PROJECT_PATH" == *"Api"* ]]; then
-      export REPO="api"
-    elif [[ "$CI_PROJECT_PATH" == *"Mobile"* ]]; then
-      export REPO="mobile"
-    else
-      echo "Nom de projet non reconnu. Exiting."
-      exit 1
-    fi
+    case "$CI_COMMIT_REF_NAME" in
+      *Api*)
+        export REPO="api"
+        ;;
+      *Mobile*)
+        export REPO="mobile"
+        ;;
+      *)
+        echo "Nom de branche non reconnu. Exiting."
+        exit 1
+        ;;
+    esac
   - echo "REPO is set to $REPO"
 
 
