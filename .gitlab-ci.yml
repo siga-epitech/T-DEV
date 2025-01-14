@@ -6,19 +6,18 @@ stages:
 
 before_script:
   - echo "Cleaning npm cache"
-  - npm cache clean --force
-  - echo "CI_PROJECT_PATH is $CI_PROJECT_PATH"
-  - echo "CI_COMMIT_REF_NAME is $CI_COMMIT_REF_NAME"
+  - npm cache clean --force"
+  - echo "SOURCE_REPO is $SOURCE_REPO"
   - |
-    case "$CI_COMMIT_REF_NAME" in
-      *Api*)
+    case "$SOURCE_REPO" in
+      api)
         export REPO="api"
         ;;
-      *Mobile*)
+      mobile)
         export REPO="mobile"
         ;;
       *)
-        echo "Nom de branche non reconnu. Exiting."
+        echo "Nom de dépôt non reconnu. Exiting."
         exit 1
         ;;
     esac
