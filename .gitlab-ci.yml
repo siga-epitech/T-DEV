@@ -4,10 +4,10 @@ stages:
   - test
   - deploy
 
-
 before_script:
   - echo "Cleaning npm cache"
   - npm cache clean --force
+  - echo "CI_PROJECT_PATH is $CI_PROJECT_PATH"
   - |
     if [[ "$CI_PROJECT_PATH" == *"Api"* ]]; then
       export REPO="api"
