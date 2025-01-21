@@ -151,7 +151,7 @@ deploy_api_dev:
     - sigaRunner
   script:
     - echo "Deploying API to development..."
-    - docker run -d --name ${DOCKER_IMAGE_NAME_API}_dev -p 3000:3000 ${DOCKER_IMAGE_NAME_API}:dev
+    - docker-compose -f api/app/docker-compose.yml up -d
     - echo "API is deployed to development."
   rules:
     - if: '$ENV == "dev" && $REPO == "api"'
