@@ -11,9 +11,9 @@ before_script:
 
   - echo "CI_PROJECT_PATH is $CI_PROJECT_PATH, CI_COMMIT_BRANCH is $CI_COMMIT_BRANCH"
   - | 
-    if [[ "$CI_COMMIT_BRANCH" == "api" ]]; then
+    if [[ "$CI_COMMIT_BRANCH" == *"api"* ]]; then
       export REPO="api"
-    elif [[ "$CI_COMMIT_BRANCH" == "mobile" ]]; then
+    elif [[ "$CI_COMMIT_BRANCH" == *"mobile"* ]]; then
       export REPO="mobile"
     else
       echo "Nom de projet non reconnu. Exiting."
