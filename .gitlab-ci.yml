@@ -6,7 +6,7 @@ stages:
 
 before_script:
   - echo "Cleaning npm cache"
-  - npm cache clean --force"
+  - npm cache clean --force
   - echo "SOURCE_REPO is $SOURCE_REPO"
   - |
     case "$SOURCE_REPO" in
