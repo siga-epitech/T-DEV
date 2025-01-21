@@ -145,8 +145,6 @@ test_mobile:
 ## Déploiement en développement pour l'API
 deploy_api_dev:
   stage: deploy
-  needs:
-    - test_api
   tags:
     - sigaRunner
   script:
