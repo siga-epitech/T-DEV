@@ -18,7 +18,7 @@ before_script:
     else
       echo "Nom de projet non reconnu. Exiting."
       exit 1
-    fib 
+    fi
   - echo "REPO is set to $REPO"
 
 # Variables de configuration
