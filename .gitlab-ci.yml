@@ -45,7 +45,7 @@ clone_repos:
       if [ "$REPO" == "api" ]; then
         export CLONE_URL="https://anthony.guarneri:${PERSONAL_ACCESS_TOKEN}@${API_REPO_URL}"
         if [ "$ENV" == "dev" ]; then
-          export CLONE_BRANCH="dev"
+          export CLONE_BRANCH="devclean"
         elif [ "$ENV" == "prod" ]; then
           export CLONE_BRANCH="feature/ci-config"  
         else
@@ -55,7 +55,7 @@ clone_repos:
       elif [ "$REPO" == "mobile" ]; then
         export CLONE_URL="https://anthony.guarneri:${PERSONAL_ACCESS_TOKEN}@${MOBILE_REPO_URL}"
         if [ "$ENV" == "dev" ]; then
-          export CLONE_BRANCH="dev"
+          export CLONE_BRANCH="devclean"
         elif [ "$ENV" == "prod" ]; then
           export CLONE_BRANCH="prod"
         else
