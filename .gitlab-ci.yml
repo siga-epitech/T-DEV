@@ -40,7 +40,7 @@ clone_repos:
     - sigaRunner
   script:
     - echo "Determining the repository and branch to clone..."
-    - if [ -d "app" ]; then rm -rf app; fi
+    - if [ -d "api" ]; then rm -rf api; fi
     - |
       if [ "$REPO" == "api" ]; then
         export CLONE_URL="https://anthony.guarneri:${PERSONAL_ACCESS_TOKEN}@${API_REPO_URL}"
@@ -67,14 +67,14 @@ clone_repos:
         exit 1
       fi
     - echo "Cloning from $CLONE_URL on branch $CLONE_BRANCH..."
-    - git clone --branch $CLONE_BRANCH $CLONE_URL app
+    - git clone --branch $CLONE_BRANCH $CLONE_URL api
     - echo "Listing files in the current directory:"
     - ls -l
     - echo "Listing files in the cloned repository directory:"
-    - ls -l app
+    - ls -l api
   artifacts:
     paths:
-      - app
+      - api
 
   
 
@@ -90,6 +90,7 @@ build_api_or_mobile:
       if [ "$REPO" == "api" ]; then
         if [ "$ENV" == "dev" ]; then
           echo "Building Docker image for the API in dev environment..."
+          docker-compose -f T-DEV-702-Api/app/docker-compose.yml up --build -d
           docker build -t ${DOCKER_IMAGE_NAME_API}:dev -f app/api/Dockerfile.dev app/api/
         elif [ "$ENV" == "prod" ]; then
           echo "Building Docker image for the API in prod environment..."
