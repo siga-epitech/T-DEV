@@ -9,12 +9,13 @@ before_script:
   - echo "Cleaning npm cache"
   - npm cache clean --force
 
-
-
 # Variables de configuration
 variables:
   API_REPO_URL: "t-dev.epitest.eu/MAR_18/T-DEV-702-Api.git"
   MOBILE_REPO_URL: "t-dev.epitest.eu/MAR_18/T-DEV-703-Mobile.git"
+  
+  REPO: "api"
+
   DOCKER_IMAGE_NAME_API: "t-dev-702-api"
   DOCKER_IMAGE_NAME_MOBILE: "t-dev-703-mobile
 
