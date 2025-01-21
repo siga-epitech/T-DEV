@@ -9,16 +9,16 @@ before_script:
   - echo "Cleaning npm cache"
   - npm cache clean --force
 
-  - echo "CI_PROJECT_PATH is $CI_PROJECT_PATH, SOURCE_REPO is $SOURCE_REPO"
+  - echo "CI_PROJECT_PATH is $CI_PROJECT_PATH, CI_COMMIT_BRANCH is $CI_COMMIT_BRANCH"
   - | 
-    if [[ "$SOURCE_REPO" == "api" ]]; then
+    if [[ "$CI_COMMIT_BRANCH" == "api" ]]; then
       export REPO="api"
-    elif [[ "$SOURCE_REPO" == "mobile" ]]; then
+    elif [[ "$CI_COMMIT_BRANCH" == "mobile" ]]; then
       export REPO="mobile"
     else
       echo "Nom de projet non reconnu. Exiting."
       exit 1
-    fi
+    fib 
   - echo "REPO is set to $REPO"
 
 # Variables de configuration
