@@ -9,13 +9,13 @@ before_script:
   - echo "Cleaning npm cache"
   - npm cache clean --force
 
-  - echo "CI_PROJECT_PATH is $CI_PROJECT_PATH, CI_PROJECT_NAME is $CI_PROJECT_NAME, CI_COMMIT_BRANCH is $CI_COMMIT_BRANCH"
+  - echo "CI_PROJECT_PATH is $CI_PROJECT_PATH, CI_PROJECT_NAME is $CI_PROJECT_NAME, CI_COMMIT_BRANCH is $CI_COMMIT_BRANCH, REPO_NAME est $REPO_NAME"
   - | 
-    if [[ "$CI_PROJECT_NAME" == *"api"* ]]; then
+    if [[ "$REPO_NAME" == *"api"* ]]; then
       export REPO="api"
-    elif [[ "$CI_PROJECT_NAME" == *"mobile"* ]]; then
+    elif [[ "$REPO_NAME" == *"mobile"* ]]; then
       export REPO="mobile"
-    elif [[ "$CI_PROJECT_NAME" == *"Devops"* ]]; then
+    elif [[ "$REPO_NAME" == *"Devops"* ]]; then
       export REPO="devops"
     else
       echo "Nom de projet non reconnu. Exiting."
