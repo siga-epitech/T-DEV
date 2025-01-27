@@ -90,7 +90,7 @@ build_api_or_mobile:
       if [ "$REPO" == "api" ]; then
         if [ "$ENV" == "dev" ]; then
           echo "Building Docker image for the API in dev environment..."
-          docker compose -f api/app/docker compose.yml up --build -d
+          docker compose -f api/app/docker-compose.yml up --build -d
         elif [ "$ENV" == "prod" ]; then
           echo "Building Docker image for the API in prod environment..."
         else
@@ -149,7 +149,7 @@ deploy_api_dev:
     - sigaRunner
   script:
     - echo "Deploying API to development..."
-    - docker compose -f api/app/docker compose.yml up -d
+    - docker compose -f api/app/docker-compose.yml up -d
     - echo "API is deployed to development."
   rules:
     - if: '$ENV == "dev" && $REPO == "api"'
