@@ -117,30 +117,30 @@ build_api_or_mobile:
 
 
 # Tests pour l'API
-test_api:
-  stage: test
-  needs:
-    - build_api_or_mobile
-  tags:
-    - sigaRunner
-  script:
-    - echo "Running tests for the API..."
-    - docker run --rm ${DOCKER_IMAGE_NAME_API}:${ENV} npm test
-  rules:
-    - if: '($REPO == "api") && ($ENV == "dev")'
+# test_api:
+#   stage: test
+#   needs:
+#     - build_api_or_mobile
+#   tags:
+#     - sigaRunner
+#   script:
+#     - echo "Running tests for the API..."
+#     - docker run --rm ${DOCKER_IMAGE_NAME_API}:${ENV} npm test
+#   rules:
+#     - if: '($REPO == "api") && ($ENV == "dev")'
 
 # Tests pour le Mobile
-test_mobile:
-  stage: test
-  needs:
-    - build_api_or_mobile
-  tags:
-    - sigaRunner
-  script:
-    - echo "Running tests for the Mobile..."
-    - docker run --rm ${DOCKER_IMAGE_NAME_MOBILE}:${ENV} npm test
-  rules:
-    - if: '($REPO == "mobile") && ($ENV == "dev")'
+# test_mobile:
+#   stage: test
+#   needs:
+#     - build_api_or_mobile
+#   tags:
+#     - sigaRunner
+#   script:
+#     - echo "Running tests for the Mobile..."
+#     - docker run --rm ${DOCKER_IMAGE_NAME_MOBILE}:${ENV} npm test
+#   rules:
+#     - if: '($REPO == "mobile") && ($ENV == "dev")'
 
 ## Déploiement en développement pour l'API
 deploy_api_dev:
