@@ -1,0 +1,6 @@
+node_modules/
+npm-debug.log
+.git
+Dockerfile
+.DS_Store
+.env
