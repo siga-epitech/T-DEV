@@ -153,8 +153,9 @@ deploy_api_dev:
     - echo "API is deployed to development."
   rules:
     - if: '$ENV == "dev" && $REPO == "api"'
-
     
+
+
 
 # Déploiement en développement pour le Mobile
 # deploy_mobile_dev:
