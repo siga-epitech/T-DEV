@@ -4,10 +4,25 @@ stages:
   #- test
   - deploy
 
-
 before_script:
   - echo "Cleaning npm cache"
   - npm cache clean --force
+  - echo "SOURCE_REPO is $SOURCE_REPO"
+  - |
+    case "$SOURCE_REPO" in
+      api)
+        export REPO="api"
+        ;;
+      mobile)
+        export REPO="mobile"
+        ;;
+      *)
+        echo "Nom de dépôt non reconnu. Exiting."
+        exit 1
+        ;;
+    esac
+  - echo "REPO is set to $REPO"
+
 
   - echo "CI_PROJECT_PATH is $CI_PROJECT_PATH, CI_PROJECT_NAME is $CI_PROJECT_NAME, CI_COMMIT_BRANCH is $CI_COMMIT_BRANCH, REPO_NAME est $REPO_NAME"
   - | 
@@ -28,8 +43,6 @@ variables:
   API_REPO_URL: "t-dev.epitest.eu/MAR_18/T-DEV-702-Api.git"
   MOBILE_REPO_URL: "t-dev.epitest.eu/MAR_18/T-DEV-703-Mobile.git"
   
-  REPO: "api"
-
   DOCKER_IMAGE_NAME_API: "t-dev-702-api"
   DOCKER_IMAGE_NAME_MOBILE: "t-dev-703-mobile"
 
@@ -47,7 +60,7 @@ clone_repos:
         if [ "$ENV" == "dev" ]; then
           export CLONE_BRANCH="devclean"
         elif [ "$ENV" == "prod" ]; then
-          export CLONE_BRANCH="feature/ci-config"  
+          export CLONE_BRANCH="dev"
         else
           echo "Invalid environment specified for API. Exiting."
           exit 1
@@ -57,7 +70,7 @@ clone_repos:
         if [ "$ENV" == "dev" ]; then
           export CLONE_BRANCH="devclean"
         elif [ "$ENV" == "prod" ]; then
-          export CLONE_BRANCH="prod"
+          export CLONE_BRANCH="dev"
         else
           echo "Invalid environment specified for Mobile. Exiting."
           exit 1
@@ -99,11 +112,11 @@ build_api_or_mobile:
         fi
       elif [ "$REPO" == "mobile" ]; then
         if [ "$ENV" == "dev" ]; then
-          echo "Building Docker image for the Mobile in dev environment..."
-          docker build -t ${DOCKER_IMAGE_NAME_MOBILE}:dev -f mobile/Dockerfile.dev mobile/
+          echo "Building and starting services for the Mobile in dev environment using docker-compose..."
+          docker-compose -f app/docker-compose.yml up --build -d mobile
         elif [ "$ENV" == "prod" ]; then
-          echo "Building Docker image for the Mobile in prod environment..."
-          docker build -t ${DOCKER_IMAGE_NAME_MOBILE}:prod -f mobile/Dockerfile.prod mobile/
+          echo "Building and starting services for the Mobile in prod environment using docker-compose..."
+          docker-compose -f app/docker-compose.yml up --build -d mobile
         else
           echo "Unknown environment for Mobile, exiting..."
           exit 1
